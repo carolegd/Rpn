@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 
@@ -10,25 +12,54 @@ class Rpn {
     }
 
     private int calculate(List<String> elements) {
-        if (elements.size()==1){
+        if (elements.size() == 1) {
             return Integer.parseInt(elements.get(0));
         }
 
-        int operatorIndex = elements.indexOf("+");
-        int operationResult;
+        String operator = "+";
+        int operatorIndex = elements.indexOf(operator);
+        if (operatorIndex==-1) {
+            operator = "-";
+            operatorIndex = elements.indexOf(operator);
+        }
+        if (operatorIndex==-1) {
+            operator = "x";
+            operatorIndex = elements.indexOf(operator);
+        }
+        if (operatorIndex==-1) {
+            operator = "/";
+            operatorIndex = elements.indexOf(operator);
+        }
+        int operationResult = operationResult(elements, operatorIndex, operator);
+        List<String> subResult = toNewOperations(elements, operatorIndex, operationResult);
+        return calculate(subResult);
+
+    }
+
+    private int operationResult(List<String> elements, int operatorIndex, String operator) {
         int firstOperand = Integer.parseInt(elements.get(operatorIndex - 2));
         int secondOperand = Integer.parseInt(elements.get(operatorIndex - 1));
-        operationResult = firstOperand + secondOperand;
+        switch (operator) {
+            case "+":
+                return firstOperand + secondOperand;
+            case "-":
+                return firstOperand - secondOperand;
+            case "x":
+                return firstOperand * secondOperand;
+            default:
+                return firstOperand / secondOperand;
+        }
+    }
 
-        List<String> subResult= new ArrayList<String>();
+    private List<String> toNewOperations(List<String> elements, int operatorIndex, int operationResult) {
+        List<String> subResult = new ArrayList<String>();
         List<String> beforeOperation = elements.subList(0, operatorIndex - 2);
         List<String> afterOperation = elements.subList(operatorIndex + 1, elements.size());
         subResult.addAll(beforeOperation);
         subResult.add(String.valueOf(operationResult));
         subResult.addAll(afterOperation);
-        return calculate(subResult);
-
-        }
+        return subResult;
+    }
 
 
 }

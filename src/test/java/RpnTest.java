@@ -45,7 +45,30 @@ public class RpnTest {
         Assert.assertEquals(20, result);
     }
 
+    @Test
+    public void subtract() {
+        Rpn rpn = new Rpn();
+        int result = rpn.calculate("6 4 -");
+        Assert.assertEquals(2, result);
+    }
 
+    @Test
+    public void multiply() {
+        Rpn rpn = new Rpn();
+        int result = rpn.calculate("6 4 x");
+        Assert.assertEquals(24, result);
+    }
+
+    @Test
+    public void divide() {
+        Rpn rpn = new Rpn();
+        int result = rpn.calculate("8 2 /");
+        Assert.assertEquals(4, result);
+    }
+
+
+    //todo negative numbers
+    
 
 
 }
