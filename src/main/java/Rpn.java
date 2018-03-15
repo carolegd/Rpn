@@ -16,43 +16,32 @@ class Rpn {
             return Integer.parseInt(elements.get(0));
         }
 
-        String operator = "+";
-        int operatorIndex = elements.indexOf(operator);
-        if (operatorIndex==-1) {
-            operator = "-";
-            operatorIndex = elements.indexOf(operator);
+        List<String> operators = Operator.symbols();
+        int operatorIndex = 0;
+        Operator operator = null;
+        for (int i = 0; i < elements.size(); i++) {
+            if (operators.contains(elements.get(i))) {
+                operatorIndex = i;
+                operator = Operator.of(elements.get(i));
+                break;
+            }
+
         }
-        if (operatorIndex==-1) {
-            operator = "x";
-            operatorIndex = elements.indexOf(operator);
-        }
-        if (operatorIndex==-1) {
-            operator = "/";
-            operatorIndex = elements.indexOf(operator);
-        }
+
         int operationResult = operationResult(elements, operatorIndex, operator);
         List<String> subResult = toNewOperations(elements, operatorIndex, operationResult);
         return calculate(subResult);
 
     }
 
-    private int operationResult(List<String> elements, int operatorIndex, String operator) {
+    private int operationResult(List<String> elements, int operatorIndex, Operator operator) {
         int firstOperand = Integer.parseInt(elements.get(operatorIndex - 2));
         int secondOperand = Integer.parseInt(elements.get(operatorIndex - 1));
-        switch (operator) {
-            case "+":
-                return firstOperand + secondOperand;
-            case "-":
-                return firstOperand - secondOperand;
-            case "x":
-                return firstOperand * secondOperand;
-            default:
-                return firstOperand / secondOperand;
-        }
+        return operator.calculate(firstOperand, secondOperand);
     }
 
     private List<String> toNewOperations(List<String> elements, int operatorIndex, int operationResult) {
-        List<String> subResult = new ArrayList<String>();
+        List<String> subResult = new ArrayList<>();
         List<String> beforeOperation = elements.subList(0, operatorIndex - 2);
         List<String> afterOperation = elements.subList(operatorIndex + 1, elements.size());
         subResult.addAll(beforeOperation);

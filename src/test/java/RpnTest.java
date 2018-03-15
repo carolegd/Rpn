@@ -1,4 +1,5 @@
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RpnTest {
@@ -66,9 +67,25 @@ public class RpnTest {
         Assert.assertEquals(4, result);
     }
 
+    @Test
+    public void compositionOfOperators() {
+        Rpn rpn = new Rpn();
+        int result = rpn.calculate("2 1 - 3 +");
+        Assert.assertEquals(4, result);
+    }
 
-    //todo negative numbers
-    
 
+    @Test
+    public void negativeSubResult() {
+        Rpn rpn = new Rpn();
+        int result = rpn.calculate("1 2 - 3 +");
+        Assert.assertEquals(2, result);
+    }
 
+    @Test
+    public void biggerCombinationOfOperators(){
+        Rpn rpn = new Rpn();
+        int result = rpn.calculate("15 7 1 1 + - / 3 x 2 1 1 + + -");
+        Assert.assertEquals(5, result);
+    }
 }
