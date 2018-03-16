@@ -1,6 +1,5 @@
-import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum Operator {
@@ -17,18 +16,13 @@ public enum Operator {
         this.operation = operation;
     }
 
-    public static List<String> symbols() {
-        return Stream.of(values()).map(operator -> operator.symbol).collect(Collectors.toList());
-    }
-
-    public static Operator of(String symbol) {
+    public static Optional<Operator> of(String symbol) {
         return Stream.of(values())
-                .filter(operator -> operator.symbol.equals(symbol))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                     .filter(operator -> operator.symbol.equals(symbol))
+                     .findFirst();
     }
 
-    public int calculate(int firstOperand, int secondOperand) {
-        return operation.apply(firstOperand, secondOperand);
+    public Operation asOperation(Operation first, Operation second) {
+        return () -> operation.apply(first.calculate(), second.calculate());
     }
 }
