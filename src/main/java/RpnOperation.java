@@ -1,9 +1,7 @@
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
-import java.util.Optional;
 
-import static java.util.Arrays.asList;
+import static java.lang.Integer.parseInt;
 
 class RpnOperation implements Operation {
     private final Deque<Operation> operations = new ArrayDeque<>();
@@ -13,25 +11,25 @@ class RpnOperation implements Operation {
     }
 
     private RpnOperation(String[] elements) {
-        for (String element: elements) {
+        for (String element : elements) {
             Operation operation = operation(element);
             operations.push(operation);
         }
     }
 
     private Operation operation(String element) {
-        Optional<Operator> maybeOperator = Operator.of(element);
-        if (maybeOperator.isPresent()) {
-            Operation second = operations.pop();
-            Operation first = operations.pop();
-            return maybeOperator.get().asOperation(first, second);
-        } else {
-            return () -> Integer.parseInt(element);
-        }
+        return Operator.of(element)
+                       .map(operator -> {
+                           Operation second = operations.pop();
+                           Operation first = operations.pop();
+                           return operator.asOperation(first, second);
+                       })
+                       .orElse(() -> parseInt(element));
     }
 
     @Override
     public Integer calculate() {
-        return operations.getFirst().calculate();
+        return operations.getFirst()
+                         .calculate();
     }
 }
