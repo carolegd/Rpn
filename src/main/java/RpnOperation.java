@@ -19,12 +19,14 @@ class RpnOperation implements Operation {
 
     private Operation operation(String element) {
         return Operator.of(element)
-                       .map(operator -> {
-                           Operation second = operations.pop();
-                           Operation first = operations.pop();
-                           return operator.asOperation(first, second);
-                       })
+                       .map(this::toOperation)
                        .orElse(() -> parseInt(element));
+    }
+
+    private Operation toOperation(Operator operator) {
+        Operation second = operations.pop();
+        Operation first = operations.pop();
+        return operator.asOperation(first, second);
     }
 
     @Override
