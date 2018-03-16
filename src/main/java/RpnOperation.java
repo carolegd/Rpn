@@ -3,10 +3,16 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
+
 class RpnOperation implements Operation {
     private final Deque<Operation> operations = new ArrayDeque<>();
 
-    public RpnOperation(List<String> elements) {
+    RpnOperation(String operations) {
+        this(operations.split(" "));
+    }
+
+    private RpnOperation(String[] elements) {
         for (String element: elements) {
             Operation operation = operation(element);
             operations.push(operation);
